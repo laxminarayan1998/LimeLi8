@@ -52,7 +52,7 @@ public class SlidePageAdapter extends PagerAdapter {
             public void onClick(View v) {
 
                 if (slideItems.get(position).getProduct() == null) {
-                  //Hello added
+                  //hello added
                 } else {
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Products/" + slideItems.get(position).getProduct() + "/subProducts/" + slideItems.get(position).getSubProduct());
