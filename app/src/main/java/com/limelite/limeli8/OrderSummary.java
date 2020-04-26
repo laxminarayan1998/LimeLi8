@@ -52,6 +52,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,8 +70,8 @@ public class OrderSummary extends AppCompatActivity implements
     ImageView imageView;
     ArrayAdapter<String> aa;
     LinearLayout offerLayout, orderNow;
-    String offerOnOrderAbove;
-    String offerPrice, pcs;
+    String offerOnOrderAbove = "0";
+    String offerPrice = "0", pcs = "0";
     RelativeLayout onOrderAboveLayout;
     Double productPriceDouble;
     Double deliveryPriceDouble = 0.0;
@@ -78,13 +79,16 @@ public class OrderSummary extends AppCompatActivity implements
 
     Double changePriceWithQuantity;
 
+    String fromOfferIntentProduct, fromOfferIntentSubProduct, product, subProduct;
+
+    DecimalFormat decimalFormatPaytm = new DecimalFormat("#####.##");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_summary);
 
         customProgressBar = new CustomProgressBar(OrderSummary.this);
-
 
         userName = findViewById(R.id.name);
         userDeatils = findViewById(R.id.details);
@@ -97,12 +101,11 @@ public class OrderSummary extends AppCompatActivity implements
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String name = dataSnapshot1.child("name").getValue(String.class);
                     String details = dataSnapshot1.child("houseNo").getValue(String.class) + "," + dataSnapshot1.child("roadNo").getValue(String.class) + "\n" + dataSnapshot1.child("city").getValue(String.class) + "," + dataSnapshot1.child("state").getValue(String.class) + "\nPin Code- " + dataSnapshot1.child("pinCode").getValue(String.class) + "\n" + dataSnapshot1.child("landmark").getValue(String.class)
-                            + "\n" + dataSnapshot1.child("number").getValue(String.class) + "\n"  + dataSnapshot1.child("alterNumber").getValue(String.class);
+                            + "\n" + dataSnapshot1.child("number").getValue(String.class) + "\n" + dataSnapshot1.child("alterNumber").getValue(String.class);
 
                     userName.setText(name);
                     userDeatils.setText(details);
                 }
-
 
 
             }
@@ -112,7 +115,6 @@ public class OrderSummary extends AppCompatActivity implements
 
             }
         });
-
 
 
         Toolbar toolbar = findViewById(R.id.homePageToolbar);
@@ -150,6 +152,14 @@ public class OrderSummary extends AppCompatActivity implements
         delivery_price = intent.getStringExtra("delivery_price");
         hashMap = (HashMap<String, String>) intent.getSerializableExtra("hashMap");
 
+        if (intent.getStringExtra("product") == null || intent.getStringExtra("subProduct") == null) {
+
+        } else {
+            fromOfferIntentProduct = intent.getStringExtra("product");
+            fromOfferIntentSubProduct = intent.getStringExtra("subProduct");
+        }
+
+
         final DecimalFormat decimalFormat = new DecimalFormat("₹###,###.##");
 
         productPriceDouble = Double.valueOf(product_price);
@@ -160,11 +170,19 @@ public class OrderSummary extends AppCompatActivity implements
                 .into(imageView);
         productPrice.setText(decimalFormat.format(productPriceDouble));
 
+        if (fromOfferIntentProduct == null || fromOfferIntentSubProduct == null) {
+            product = HorizontalScrollRecyclerAdapter.PRODUCT_NAME;
+            subProduct = subProductsRecyclerAdapter.SUB_PRODUCT_NAME;
+        } else {
+            product = fromOfferIntentProduct;
+            subProduct = fromOfferIntentSubProduct;
+        }
 
         deliveryPriceDouble = Double.valueOf(delivery_price);
         deliveryPrice.setText(decimalFormat.format(deliveryPriceDouble));
 
-        DatabaseReference quantityRef = FirebaseDatabase.getInstance().getReference("Products/" + HorizontalScrollRecyclerAdapter.PRODUCT_NAME + "/subProducts/" + subProductsRecyclerAdapter.SUB_PRODUCT_NAME + "/quantity");
+
+        DatabaseReference quantityRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/quantity");
         quantityRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -175,83 +193,85 @@ public class OrderSummary extends AppCompatActivity implements
                 spin.setAdapter(aa);
 
 
-                DatabaseReference offerPriceRef = FirebaseDatabase.getInstance().getReference("Products/" + HorizontalScrollRecyclerAdapter.PRODUCT_NAME + "/subProducts/" + subProductsRecyclerAdapter.SUB_PRODUCT_NAME + "/offerPrice");
-                offerPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        if (dataSnapshot.exists()) {
-                            offerPrice = dataSnapshot.getValue(String.class);
-                        } else {
-                            offerPrice = String.valueOf(0);
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
-                DatabaseReference pcsRef = FirebaseDatabase.getInstance().getReference("Products/" + HorizontalScrollRecyclerAdapter.PRODUCT_NAME + "/subProducts/" + subProductsRecyclerAdapter.SUB_PRODUCT_NAME + "/pieces");
-                pcsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        pcs = dataSnapshot.getValue(String.class);
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
-                DatabaseReference offerOnOrderRef = FirebaseDatabase.getInstance().getReference("Products/" + HorizontalScrollRecyclerAdapter.PRODUCT_NAME + "/subProducts/" + subProductsRecyclerAdapter.SUB_PRODUCT_NAME + "/offerOnAbove");
-                offerOnOrderRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        if (dataSnapshot.exists()) {
-                            offerLayout.setVisibility(View.VISIBLE);
-                            offerOnOrderAbove = dataSnapshot.getValue(String.class);
-
-                            DatabaseReference additionalOfferText = FirebaseDatabase.getInstance().getReference("Products/" + HorizontalScrollRecyclerAdapter.PRODUCT_NAME + "/subProducts/" + subProductsRecyclerAdapter.SUB_PRODUCT_NAME + "/offerText");
-                            additionalOfferText.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                    if (dataSnapshot.exists()) {
-                                        offerText.setText(Html.fromHtml(dataSnapshot.getValue(String.class)));
-                                    } else {
-                                        offerText.setText("Get ₹" + offerPrice + " off on order above " + offerOnOrderAbove + "pc(s)");
-                                    }
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        } else {
-                            offerLayout.setVisibility(View.GONE);
-                            offerOnOrderAbove = String.valueOf(0);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+//                DatabaseReference offerPriceRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerPrice");
+//                offerPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        if (dataSnapshot.exists()) {
+//                            offerPrice = dataSnapshot.getValue(String.class);
+//                        } else {
+//                            offerPrice = String.valueOf(0);
+//                        }
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//
+//
+//                DatabaseReference pcsRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/pieces");
+//                pcsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        pcs = dataSnapshot.getValue(String.class);
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//
+//
+//                DatabaseReference offerOnOrderRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerOnAbove");
+//                offerOnOrderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                        if (dataSnapshot.exists()) {
+//                            offerLayout.setVisibility(View.VISIBLE);
+//                            offerOnOrderAbove = dataSnapshot.getValue(String.class);
+//
+//                            DatabaseReference additionalOfferText = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerText");
+//                            additionalOfferText.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                                    if (dataSnapshot.exists()) {
+//                                        offerText.setText(Html.fromHtml(dataSnapshot.getValue(String.class)));
+//                                    } else {
+//                                        offerText.setText("Get ₹" + offerPrice + " off on order above " + offerOnOrderAbove + "pc(s)");
+//                                    }
+//
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                }
+//                            });
+//
+//                        } else {
+//                            offerLayout.setVisibility(View.GONE);
+//                            offerOnOrderAbove = String.valueOf(0);
+//                        }
+//
+//                        //customProgressBar.dismissProgressBar();
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 
 
             }
@@ -288,6 +308,7 @@ public class OrderSummary extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
+                Log.i("tx_amount", decimalFormat.format(changePriceWithQuantity));
                 if (ContextCompat.checkSelfPermission(OrderSummary.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(OrderSummary.this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
                 }
@@ -316,7 +337,7 @@ public class OrderSummary extends AppCompatActivity implements
                                 paramMap.put("ORDER_ID", order_id);
                                 paramMap.put("CUST_ID", customer_id);
                                 paramMap.put("CHANNEL_ID", "WAP");
-                                paramMap.put("TXN_AMOUNT", changePriceWithQuantity.toString());
+                                paramMap.put("TXN_AMOUNT", decimalFormatPaytm.format(changePriceWithQuantity));
                                 paramMap.put("WEBSITE", "WEBSTAGING");
                                 paramMap.put("INDUSTRY_TYPE_ID", "Retail");
                                 paramMap.put("CALLBACK_URL", callBack);
@@ -380,7 +401,11 @@ public class OrderSummary extends AppCompatActivity implements
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        customProgressBar.dismissProgressBar();
+                        try {
+                            customProgressBar.dismissProgressBar();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
 
                     }
@@ -393,7 +418,7 @@ public class OrderSummary extends AppCompatActivity implements
                         paramMap.put("ORDER_ID", order_id);
                         paramMap.put("CUST_ID", customer_id);
                         paramMap.put("CHANNEL_ID", "WAP");
-                        paramMap.put("TXN_AMOUNT", changePriceWithQuantity.toString());
+                        paramMap.put("TXN_AMOUNT", decimalFormatPaytm.format(changePriceWithQuantity));
                         paramMap.put("WEBSITE", "WEBSTAGING");
                         paramMap.put("INDUSTRY_TYPE_ID", "Retail");
                         paramMap.put("CALLBACK_URL", callBack);
@@ -445,37 +470,122 @@ public class OrderSummary extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         hashMap.clear();
+        finish();
         super.onBackPressed();
     }
 
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+
+        customProgressBar.startProgressBar();
 
 
-        DecimalFormat decimalFormat = new DecimalFormat("₹###,###.##");
+        DatabaseReference offerPriceRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerPrice");
+        offerPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        Double selectedQuantity = Double.valueOf(list.get(position));
-        Double orderOnAboveOffer = Double.valueOf(offerOnOrderAbove);
-        Double offerPriceDouble = Double.valueOf(offerPrice);
-        Double pcsDouble = Double.valueOf(pcs);
+                if (dataSnapshot.exists()) {
+                    offerPrice = dataSnapshot.getValue(String.class);
+                } else {
+                    offerPrice = String.valueOf(0);
+                }
 
-        Double showPrice = (productPriceDouble / pcsDouble) * selectedQuantity;
 
-        if (selectedQuantity >= orderOnAboveOffer) {
-            changePriceWithQuantity = showPrice + deliveryPriceDouble + offerPriceDouble;
-            onOrderAbovePrice.setText(decimalFormat.format(offerPriceDouble));
-            onOrderAboveLayout.setVisibility(View.VISIBLE);
-        } else {
-            changePriceWithQuantity = showPrice + deliveryPriceDouble;
-            onOrderAboveLayout.setVisibility(View.GONE);
-        }
+            }
 
-        Log.i("total", changePriceWithQuantity.toString());
-        totalPrice.setText(decimalFormat.format(changePriceWithQuantity));
-        price.setText(decimalFormat.format(showPrice));
-        grandTotalPrice.setText(decimalFormat.format(changePriceWithQuantity));
-        quantityMultiplyPrice.setText("Price " + "(₹" + product_price + "x" + list.get(position) + ")");
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        DatabaseReference pcsRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/pieces");
+        pcsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                pcs = dataSnapshot.getValue(String.class);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        DatabaseReference offerOnOrderRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerOnAbove");
+        offerOnOrderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+                    offerLayout.setVisibility(View.VISIBLE);
+                    offerOnOrderAbove = dataSnapshot.getValue(String.class);
+
+                    DatabaseReference additionalOfferText = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerText");
+                    additionalOfferText.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.exists()) {
+                                offerText.setText(Html.fromHtml(dataSnapshot.getValue(String.class)));
+                            } else {
+                                offerText.setText("Get ₹" + offerPrice + " off on order above " + offerOnOrderAbove + "pc(s)");
+                            }
+
+                            DecimalFormat decimalFormat = new DecimalFormat("₹###,###.##");
+
+                            Double selectedQuantity = Double.valueOf(list.get(position));
+                            Double orderOnAboveOffer = Double.valueOf(offerOnOrderAbove);
+                            Double offerPriceDouble = Double.valueOf(offerPrice);
+                            Double pcsDouble = Double.valueOf(pcs);
+
+                            Double showPrice = (productPriceDouble / pcsDouble) * selectedQuantity;
+
+                            if (selectedQuantity >= orderOnAboveOffer) {
+                                changePriceWithQuantity = showPrice + deliveryPriceDouble - offerPriceDouble;
+                                onOrderAbovePrice.setText("-" + decimalFormat.format(offerPriceDouble));
+                                onOrderAboveLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                changePriceWithQuantity = showPrice + deliveryPriceDouble;
+                                onOrderAboveLayout.setVisibility(View.GONE);
+                            }
+
+                            Log.i("total", changePriceWithQuantity.toString());
+                            totalPrice.setText(decimalFormat.format(changePriceWithQuantity));
+                            price.setText(decimalFormat.format(showPrice));
+                            grandTotalPrice.setText(decimalFormat.format(changePriceWithQuantity));
+                            quantityMultiplyPrice.setText("Price " + "(₹" + product_price + " for " + pcs + " pcs * " + list.get(position) + " quantity)");
+
+                            customProgressBar.dismissProgressBar();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                } else {
+                    offerLayout.setVisibility(View.GONE);
+                    offerOnOrderAbove = String.valueOf(0);
+                }
+
+                //customProgressBar.dismissProgressBar();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 

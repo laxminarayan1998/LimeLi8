@@ -51,6 +51,9 @@ public class SlidePageAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
 
+                HorizontalScrollRecyclerAdapter.PRODUCT_NAME = null;
+                subProductsRecyclerAdapter.SUB_PRODUCT_NAME = null;
+
                 if (slideItems.get(position).getProduct() == null) {
                   //hello added
                 } else {

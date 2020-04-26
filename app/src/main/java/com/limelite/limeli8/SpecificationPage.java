@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +42,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -120,12 +122,6 @@ public class SpecificationPage extends AppCompatActivity {
         fromOfferIntentProduct = intent.getStringExtra("product");
         fromOfferIntentSubProduct = intent.getStringExtra("subProduct");
 
-//        productImageUrl = bundle.getString("product_image");
-//        productName = bundle.getString("product_name");
-//        productFinalPrice = bundle.getString("product_final_price");
-//        String productStrikePrice = bundle.getString("product_strike_price");
-//        String productPcs = bundle.getString("products_pcs");
-//        String productStrikeOffer = bundle.getString("product_strike_offer");
 
         if (fromOfferIntentProduct == null || fromOfferIntentSubProduct == null) {
             product = HorizontalScrollRecyclerAdapter.PRODUCT_NAME;
@@ -240,6 +236,30 @@ public class SpecificationPage extends AppCompatActivity {
                             intent.putExtra("product_price", subProductPrice.getText());
                             intent.putExtra("product_url", productImageUrl);
                             intent.putExtra("delivery_price", deliveryPriceString);
+
+                            if (fromOfferIntentProduct == null || fromOfferIntentSubProduct == null) {
+
+                            } else {
+                                intent.putExtra("product", fromOfferIntentProduct);
+                                intent.putExtra("subProduct", fromOfferIntentSubProduct);
+                                Log.i("product", fromOfferIntentProduct);
+                                Log.i("subProduct", fromOfferIntentSubProduct);
+                            }
+
+
+                            Log.i("hashMap", String.valueOf((Serializable) map));
+                            Log.i("product_name", String.valueOf(subProductTitle.getText()));
+                            Log.i("product_price", String.valueOf(subProductPrice.getText()));
+                            Log.i("product_url", productImageUrl);
+                            Log.i("delivery_price", deliveryPriceString);
+
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    startActivity(new Intent(getApplicationContext(), LogIn.class));
+//                                    finish();
+//                                }
+//                            }, 2000);
                             startActivity(intent);
                         } else {
                             Intent intent = new Intent(SpecificationPage.this, UserDetailsActivity.class);
@@ -358,10 +378,21 @@ public class SpecificationPage extends AppCompatActivity {
 
     void optionCreationFromDatabase() {
 
+        customProgressBar.startProgressBar();
 
         Picasso.get()
                 .load(productImageUrl)
-                .into(subProductImage);
+                .into(subProductImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        customProgressBar.dismissProgressBar();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        customProgressBar.dismissProgressBar();
+                    }
+                });
 
         subProductTitle.setText(productName);
         subProductPrice.setText(productFinalPrice);
