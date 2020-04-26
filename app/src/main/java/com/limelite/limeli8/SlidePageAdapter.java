@@ -47,13 +47,12 @@ public class SlidePageAdapter extends PagerAdapter {
                 .into(slideImg);
 
 
-
         slideLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (slideItems.get(position).getProduct() == null) {
-
+//Hey
                 } else {
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Products/" + slideItems.get(position).getProduct() + "/subProducts/" + slideItems.get(position).getSubProduct());
@@ -100,7 +99,7 @@ public class SlidePageAdapter extends PagerAdapter {
         container.addView(slideLayout);
 
 
-        return  slideLayout;
+        return slideLayout;
 
     }
 
@@ -116,6 +115,6 @@ public class SlidePageAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View)object);
+        container.removeView((View) object);
     }
 }
