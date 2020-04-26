@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/map"
+        android:orderInCategory="100"
+        android:title="Bhubaneswar"
+        android:icon="@drawable/ic_notifications_none_black_24dp"
+        app:showAsAction="always|withText">
+    </item>
+
+    <item
+        android:id="@+id/my_booking"
+        android:title="My bookings"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        app:showAsAction="collapseActionView|withText"/>
+
+    <item
+        android:id="@+id/log_out"
+        android:orderInCategory="300"
+        android:title="Log Out"
+        app:showAsAction="collapseActionView|withText">
+    </item>
+
+
+</menu>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/semiblackBg"
+    tools:context=".UserDetailsActivity">
+
+    <include
+        android:id="@+id/homePageToolbar"
+        layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/homePageToolbar"
+        android:layout_above="@id/save_btn">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blackBg"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/pin_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="Pin Code*"
+                        android:inputType="number"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/house_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="House No., Building name*"
+                        android:inputType="textNoSuggestions"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/road"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="Road Name, Area, Colony*"
+                        android:inputType="textVisiblePassword"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:gravity="center"
+                        app:boxBackgroundColor="#FFF">
+
+                        <EditText
+                            android:id="@+id/city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="2.5dp"
+                            android:ems="10"
+                            android:fontFamily="@font/helvetica"
+                            android:hint="City*"
+                            android:text="Bhubaneswar"
+                            android:enabled="false"
+                            android:inputType="text"
+                            android:textSize="15sp"
+                            tools:layout_editor_absoluteX="12dp"
+                            tools:layout_editor_absoluteY="67dp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2.5dp"
+                        android:layout_weight="1"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:gravity="center"
+                        app:boxBackgroundColor="#FFF">
+
+                        <EditText
+                            android:id="@+id/state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:ems="10"
+                            android:fontFamily="@font/helvetica"
+                            android:hint="State*"
+                            android:text="Odisha"
+                            android:enabled="false"
+                            android:inputType="text"
+                            android:textSize="15sp"
+                            tools:layout_editor_absoluteX="12dp"
+                            tools:layout_editor_absoluteY="67dp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/landmark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="Landmark (Optional)"
+                        android:inputType="textNoSuggestions"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="8dp"
+                    android:background="@color/grey_color" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="Name*"
+                        android:inputType="textVisiblePassword"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="10-digit mobile number*"
+                        android:inputType="phone"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    app:boxBackgroundColor="#FFF">
+
+                    <EditText
+                        android:id="@+id/alter_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:fontFamily="@font/helvetica"
+                        android:hint="Alternate Phone Number (Optional)"
+                        android:inputType="phone"
+                        android:textSize="15sp"
+                        tools:layout_editor_absoluteX="12dp"
+                        tools:layout_editor_absoluteY="67dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/save_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/ic_button"
+        android:text="SAVE"
+        android:textColor="#FFF" />
+
+</RelativeLayout>

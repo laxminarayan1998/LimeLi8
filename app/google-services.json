@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "71349774077",
+    "firebase_url": "https://limeli8-a4bb9.firebaseio.com",
+    "project_id": "limeli8-a4bb9",
+    "storage_bucket": "limeli8-a4bb9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71349774077:android:58fac198e81e3b097f8094",
+        "android_client_info": {
+          "package_name": "com.limelite.limeli8"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71349774077-jgqas4m4k1b88hl38gsumd0vuf56v1b7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.limelite.limeli8",
+            "certificate_hash": "b7d72238a0a4de0baad00f3a15d991ce2a7aefc1"
+          }
+        },
+        {
+          "client_id": "71349774077-hsk7moh7br71fuo2srb8a0r9l5gfp9ij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuidfoE7PuJlG7V9u-xSgjA1SFc19qREo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71349774077-hsk7moh7br71fuo2srb8a0r9l5gfp9ij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
