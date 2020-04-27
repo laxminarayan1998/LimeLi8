@@ -60,6 +60,7 @@ public class HorizontalScrollRecyclerAdapter extends RecyclerView.Adapter<Horizo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SlidePageAdapter.MAINPRODUCTNAMEFROMBANNER = null;
                 PRODUCT_NAME = printSectionItems.get(position).getName();
                 Intent intent = new Intent(context, SubProductPage.class);
                 intent.putExtra("productName", printSectionItems.get(position).getName());

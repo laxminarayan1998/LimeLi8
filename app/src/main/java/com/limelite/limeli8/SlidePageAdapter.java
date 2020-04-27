@@ -26,6 +26,7 @@ public class SlidePageAdapter extends PagerAdapter {
     private Context context;
     private List<SlideModel> slideItems;
     String productImageUrl, productName, productFinalPrice, productStrikePrice, productPcs, productStrikeOffer;
+    static String MAINPRODUCTNAMEFROMBANNER;
 
     public SlidePageAdapter(Context context, List<SlideModel> slideItems) {
         this.context = context;
@@ -54,8 +55,16 @@ public class SlidePageAdapter extends PagerAdapter {
                 HorizontalScrollRecyclerAdapter.PRODUCT_NAME = null;
                 subProductsRecyclerAdapter.SUB_PRODUCT_NAME = null;
 
-                if (slideItems.get(position).getProduct() == null) {
+                MAINPRODUCTNAMEFROMBANNER = slideItems.get(position).getProduct();
+
+                if (slideItems.get(position).getProduct() == null && slideItems.get(position).getSubProduct() == null) {
                   //hello added
+                } else if (slideItems.get(position).getSubProduct() == null) {
+
+                    Intent intent = new Intent(context, SubProductPage.class);
+                    intent.putExtra("productName", slideItems.get(position).getProduct());
+                    context.startActivity(intent);
+
                 } else {
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Products/" + slideItems.get(position).getProduct() + "/subProducts/" + slideItems.get(position).getSubProduct());

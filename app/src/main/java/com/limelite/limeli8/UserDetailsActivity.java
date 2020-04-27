@@ -70,10 +70,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                 _number = number.getText().toString();
                 _alterNumber = alterNumber.getText().toString();
 
-                if (_number.isEmpty() || _pincode.isEmpty() || _houseNo.isEmpty() || _roadNo.isEmpty() || _city.isEmpty() || _state.isEmpty() || _name.isEmpty()) {
+                if (_number.isEmpty()) {
 
-
-                    Toast.makeText(getApplicationContext(), "Please check your entries!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Phone number is mandatory!", Toast.LENGTH_LONG).show();
                 } else {
 
                     databaseReference.child(key).child("name").setValue(_name);

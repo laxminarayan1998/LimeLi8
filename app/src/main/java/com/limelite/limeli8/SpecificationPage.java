@@ -117,6 +117,12 @@ public class SpecificationPage extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationIcon(R.drawable.ic_back_btn_with_red_bg);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         fromOfferIntentProduct = intent.getStringExtra("product");
@@ -242,24 +248,9 @@ public class SpecificationPage extends AppCompatActivity {
                             } else {
                                 intent.putExtra("product", fromOfferIntentProduct);
                                 intent.putExtra("subProduct", fromOfferIntentSubProduct);
-                                Log.i("product", fromOfferIntentProduct);
-                                Log.i("subProduct", fromOfferIntentSubProduct);
                             }
 
 
-                            Log.i("hashMap", String.valueOf((Serializable) map));
-                            Log.i("product_name", String.valueOf(subProductTitle.getText()));
-                            Log.i("product_price", String.valueOf(subProductPrice.getText()));
-                            Log.i("product_url", productImageUrl);
-                            Log.i("delivery_price", deliveryPriceString);
-
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    startActivity(new Intent(getApplicationContext(), LogIn.class));
-//                                    finish();
-//                                }
-//                            }, 2000);
                             startActivity(intent);
                         } else {
                             Intent intent = new Intent(SpecificationPage.this, UserDetailsActivity.class);
@@ -310,10 +301,6 @@ public class SpecificationPage extends AppCompatActivity {
                 int selectedId = rgp.getCheckedRadioButtonId();
                 RadioButton radioButton = (RadioButton) findViewById(selectedId);
 
-                //hashSet.addAll(Collections.singleton(String.valueOf(rgp.getId())));
-
-                Log.i("haset", String.valueOf(hashSet));
-                Log.i("id", String.valueOf(rgp.getId()));
 
 
                 try {
@@ -365,12 +352,6 @@ public class SpecificationPage extends AppCompatActivity {
             @Override
             public void onFinish() {
 
-//                try {
-//                    customProgressBar.dismissProgressBar();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-                //finalPrice += Integer.parseInt(price);
                 subProductPrice.setText(String.valueOf(price));
             }
         }.start();
@@ -570,5 +551,11 @@ public class SpecificationPage extends AppCompatActivity {
             e.printStackTrace();
         }
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 }

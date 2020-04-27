@@ -31,6 +31,13 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="*Expect phone number all other fields are optional."
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#FFF"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
@@ -47,7 +54,7 @@
                         android:layout_marginTop="10dp"
                         android:ems="10"
                         android:fontFamily="@font/helvetica"
-                        android:hint="Pin Code*"
+                        android:hint="Pin Code (Optional)"
                         android:inputType="number"
                         android:textSize="15sp"
                         tools:layout_editor_absoluteX="12dp"
@@ -71,7 +78,7 @@
                         android:layout_marginTop="10dp"
                         android:ems="10"
                         android:fontFamily="@font/helvetica"
-                        android:hint="House No., Building name*"
+                        android:hint="House No., Building name (Optional)"
                         android:inputType="textNoSuggestions"
                         android:textSize="15sp"
                         tools:layout_editor_absoluteX="12dp"
@@ -95,7 +102,7 @@
                         android:layout_marginTop="10dp"
                         android:ems="10"
                         android:fontFamily="@font/helvetica"
-                        android:hint="Road Name, Area, Colony*"
+                        android:hint="Road Name, Area, Colony (Optional)"
                         android:inputType="textVisiblePassword"
                         android:textSize="15sp"
                         tools:layout_editor_absoluteX="12dp"
@@ -126,7 +133,7 @@
                             android:layout_marginRight="2.5dp"
                             android:ems="10"
                             android:fontFamily="@font/helvetica"
-                            android:hint="City*"
+                            android:hint="City (Optional)"
                             android:text="Bhubaneswar"
                             android:enabled="false"
                             android:inputType="text"
@@ -154,7 +161,7 @@
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:fontFamily="@font/helvetica"
-                            android:hint="State*"
+                            android:hint="State (Optional)"
                             android:text="Odisha"
                             android:enabled="false"
                             android:inputType="text"
@@ -215,7 +222,7 @@
                         android:layout_marginTop="10dp"
                         android:ems="10"
                         android:fontFamily="@font/helvetica"
-                        android:hint="Name*"
+                        android:hint="Name (Optional)"
                         android:inputType="textVisiblePassword"
                         android:textSize="15sp"
                         tools:layout_editor_absoluteX="12dp"
