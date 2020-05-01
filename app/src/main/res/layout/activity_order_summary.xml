@@ -20,7 +20,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -50,11 +51,12 @@
                     android:textSize="14dp" />
 
                 <Button
+                    android:id="@+id/change_address"
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/ic_button"
-                    android:text="Change or Add Address"
+                    android:text="Change Address"
                     android:textColor="#FFF" />
 
             </LinearLayout>
@@ -234,6 +236,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/showOfferText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/apple_gothic"
@@ -246,7 +249,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:fontFamily="@font/apple_gothic"
-                            android:text="₹150"
+                            android:text=""
                             android:textColor="#FFF" />
 
                     </RelativeLayout>
@@ -256,6 +259,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/deliveryPriceText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/apple_gothic"
@@ -285,6 +289,7 @@
                         android:background="#777777" />
 
                     <TextView
+                        android:id="@+id/totalAmountText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -350,6 +355,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/grandTotalText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/apple_gothic"

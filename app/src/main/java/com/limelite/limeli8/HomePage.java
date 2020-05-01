@@ -66,6 +66,7 @@ public class HomePage extends AppCompatActivity {
         customProgressBar = new CustomProgressBar(this);
         customProgressBar.startProgressBar();
         customProgressBar.dialog.setCanceledOnTouchOutside(false);
+        customProgressBar.dialog.setCancelable(false);
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -378,7 +379,7 @@ public class HomePage extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.my_booking:
-                //startActivity(new Intent(getApplicationContext(), MyBooking.class));
+                startActivity(new Intent(getApplicationContext(), MyBooking.class));
                 return true;
             case R.id.log_out:
                 FirebaseAuth.getInstance().signOut();

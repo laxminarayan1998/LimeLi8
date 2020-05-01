@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -43,6 +44,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
@@ -62,7 +64,9 @@ import java.util.UUID;
 public class OrderSummary extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
-    TextView productOption, productName, productPrice, deliveryPrice, offerText, onOrderAbovePrice, totalPrice, grandTotalPrice, price, quantityMultiplyPrice, userName, userDeatils, gstView, gstShow;
+    TextView productOption, productName, productPrice, deliveryPrice, offerText, onOrderAbovePrice, totalPrice, grandTotalPrice, price, quantityMultiplyPrice, userName, userDeatils, gstView, gstShow
+            , showOfferText, deliveryPriceText, grandTotalText, totalAmountText;
+
     HashMap<String, String> hashMap;
     Spinner spin;
     String product_name, product_price, product_url, delivery_price;
@@ -76,11 +80,12 @@ public class OrderSummary extends AppCompatActivity implements
     Double productPriceDouble;
     Double deliveryPriceDouble = 0.0;
     CustomProgressBar customProgressBar;
-
+    Button changeAddress;
     Double changePriceWithQuantity;
     Double totalPriceWithGst;
 
     String fromOfferIntentProduct, fromOfferIntentSubProduct, product, subProduct;
+    String productSubTitleValue = "";
 
     DecimalFormat decimalFormatPaytm = new DecimalFormat("#####.##");
 
@@ -95,9 +100,10 @@ public class OrderSummary extends AppCompatActivity implements
         userDeatils = findViewById(R.id.details);
         gstView = findViewById(R.id.gst);
         gstShow = findViewById(R.id.gst_show);
+        changeAddress = findViewById(R.id.change_address);
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/userDetails");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -162,6 +168,27 @@ public class OrderSummary extends AppCompatActivity implements
             }
         });
 
+        changeAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(OrderSummary.this)
+                        .setTitle("Change Address!")
+                        .setMessage("Are you sure you want to change this address?")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(getApplicationContext(), UserDetailsEdit.class));
+                            }
+                        })
+
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            }
+        });
+
 
         Toolbar toolbar = findViewById(R.id.homePageToolbar);
 
@@ -192,6 +219,10 @@ public class OrderSummary extends AppCompatActivity implements
         price = findViewById(R.id.product_price);
         quantityMultiplyPrice = findViewById(R.id.quantity_multiply_price);
         orderNow = findViewById(R.id.order_now);
+        showOfferText = findViewById(R.id.showOfferText);
+        deliveryPriceText = findViewById(R.id.deliveryPriceText);
+        grandTotalText = findViewById(R.id.grandTotalText);
+        totalAmountText = findViewById(R.id.totalAmountText);
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
@@ -248,85 +279,6 @@ public class OrderSummary extends AppCompatActivity implements
                 }
                 spin.setAdapter(aa);
 
-//                DatabaseReference offerPriceRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerPrice");
-//                offerPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        if (dataSnapshot.exists()) {
-//                            offerPrice = dataSnapshot.getValue(String.class);
-//                        } else {
-//                            offerPrice = String.valueOf(0);
-//                        }
-//
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//
-//
-//                DatabaseReference pcsRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/pieces");
-//                pcsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        pcs = dataSnapshot.getValue(String.class);
-//
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//
-//
-//                DatabaseReference offerOnOrderRef = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerOnAbove");
-//                offerOnOrderRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        if (dataSnapshot.exists()) {
-//                            offerLayout.setVisibility(View.VISIBLE);
-//                            offerOnOrderAbove = dataSnapshot.getValue(String.class);
-//
-//                            DatabaseReference additionalOfferText = FirebaseDatabase.getInstance().getReference("Products/" + product + "/subProducts/" + subProduct + "/offerText");
-//                            additionalOfferText.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                @Override
-//                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                                    if (dataSnapshot.exists()) {
-//                                        offerText.setText(Html.fromHtml(dataSnapshot.getValue(String.class)));
-//                                    } else {
-//                                        offerText.setText("Get ₹" + offerPrice + " off on order above " + offerOnOrderAbove + "pc(s)");
-//                                    }
-//
-//                                }
-//
-//                                @Override
-//                                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                }
-//                            });
-//
-//                        } else {
-//                            offerLayout.setVisibility(View.GONE);
-//                            offerOnOrderAbove = String.valueOf(0);
-//                        }
-//
-//                        //customProgressBar.dismissProgressBar();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
 
             }
 
@@ -349,6 +301,8 @@ public class OrderSummary extends AppCompatActivity implements
             whiteSpannable.setSpan(new ForegroundColorSpan(Color.WHITE), 0, white.length(), 0);
             builder.append(whiteSpannable + "\n");
 
+            productSubTitleValue += entry.getValue() + " ";
+
         }
 
         productOption.setText(builder);
@@ -362,7 +316,41 @@ public class OrderSummary extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-                Log.i("tx_amount", decimalFormat.format(changePriceWithQuantity));
+                String price = "";
+                String offerPrice = "";
+                String delivery_price = "";
+                String total_price = "";
+                String gstPrice = "";
+                String grandTotalprice = "";
+
+                String priceText = "";
+                String offerPriceText = "";
+                String delivery_price_text = "";
+                String totalPriceText = "";
+                String gstPriceText = "";
+                String grandTotal = "";
+                String grandTotalpriceText = "";
+
+                price = productPrice.getText().toString();
+                offerPrice = onOrderAbovePrice.getText().toString();
+                delivery_price = deliveryPrice.getText().toString();
+                total_price = totalPrice.getText().toString();
+                gstPrice = gstView.getText().toString();
+                grandTotalprice = grandTotalPrice.getText().toString();
+
+                priceText = quantityMultiplyPrice.getText().toString();
+                offerPriceText = showOfferText.getText().toString();
+                delivery_price_text = deliveryPriceText.getText().toString();
+                totalPriceText = totalAmountText.getText().toString();
+                gstPriceText = gstShow.getText().toString();
+                grandTotal = grandTotalText.getText().toString();
+                grandTotalpriceText = grandTotalPrice.getText().toString();
+
+
+                final DatabaseReference myBookingRef = FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/myBookings");
+                final String key = myBookingRef.push().getKey();
+
+
                 if (ContextCompat.checkSelfPermission(OrderSummary.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(OrderSummary.this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
                 }
@@ -372,6 +360,22 @@ public class OrderSummary extends AppCompatActivity implements
                 final String order_id = "LIMELI8" + UUID.randomUUID().toString().substring(0, 5);
                 String url = "https://limel8.000webhostapp.com/Paytm/generateChecksum.php";
                 final String callBack = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
+
+                final HashMap<String, String> priceDetails = new HashMap<>();
+                priceDetails.put("price", price);
+                priceDetails.put("offerPrice", offerPrice);
+                priceDetails.put("deliveryPrice", delivery_price);
+                priceDetails.put("totalPrice", total_price);
+                priceDetails.put("gstPrice", gstPrice);
+                priceDetails.put("grandTotalPrice", grandTotalprice);
+                priceDetails.put("orderId", order_id);
+                priceDetails.put("priceWithQuantity", priceText);
+                priceDetails.put("gstValue", gstPriceText);
+                priceDetails.put("productSubTitleValue", productSubTitleValue);
+                priceDetails.put("productUrl", product_url);
+                priceDetails.put("orderStatus", "PLACED");
+
+                Log.i("priceWithDetails", priceDetails.toString());
 
                 RequestQueue requestQueue = Volley.newRequestQueue(OrderSummary.this);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -406,9 +410,11 @@ public class OrderSummary extends AppCompatActivity implements
 
                                         if (inResponse.getString("STATUS").equals("TXN_SUCCESS")) {
                                             successAlertDialog("ORDER ID : " + order_id);
+                                            myBookingRef.child(key).setValue(priceDetails);
+                                            myBookingRef.child(key + "/timeStamp").setValue(ServerValue.TIMESTAMP);
+                                            myBookingRef.child(key + "/date").setValue(inResponse.getString("TXNDATE"));
                                         }
 
-                                        Log.i("Bundle", inResponse.toString());
 
                                     }
 
@@ -505,6 +511,7 @@ public class OrderSummary extends AppCompatActivity implements
             e.printStackTrace();
         }
         alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
 
         dismissBotton = dialogView.findViewById(R.id.dismiss_button);
         orderId = dialogView.findViewById(R.id.order_id);
