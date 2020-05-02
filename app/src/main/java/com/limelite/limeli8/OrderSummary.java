@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,8 +67,7 @@ import java.util.UUID;
 public class OrderSummary extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
-    TextView productOption, productName, productPrice, deliveryPrice, offerText, onOrderAbovePrice, totalPrice, grandTotalPrice, price, quantityMultiplyPrice, userName, userDeatils, gstView, gstShow
-            , showOfferText, deliveryPriceText, grandTotalText, totalAmountText;
+    TextView productOption, productName, productPrice, deliveryPrice, offerText, onOrderAbovePrice, totalPrice, grandTotalPrice, price, quantityMultiplyPrice, userName, userDeatils, gstView, gstShow, showOfferText, deliveryPriceText, grandTotalText, totalAmountText;
 
     HashMap<String, String> hashMap;
     Spinner spin;
@@ -148,10 +150,10 @@ public class OrderSummary extends AppCompatActivity implements
                         details += landmark + "\n";
                     if (number.equals("")) {
                     } else
-                        details +="Phone - " +  number;
+                        details += "Phone - " + number;
                     if (alterNumber.equals("")) {
                     } else
-                        details +="\nAlternate Phone - " +  alterNumber;
+                        details += "\nAlternate Phone - " + alterNumber;
 
 
                     userDeatils.setText(details);
@@ -316,20 +318,16 @@ public class OrderSummary extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
+                customProgressBar.startProgressBar();
+
                 String price = "";
                 String offerPrice = "";
                 String delivery_price = "";
                 String total_price = "";
                 String gstPrice = "";
                 String grandTotalprice = "";
-
                 String priceText = "";
-                String offerPriceText = "";
-                String delivery_price_text = "";
-                String totalPriceText = "";
                 String gstPriceText = "";
-                String grandTotal = "";
-                String grandTotalpriceText = "";
 
                 price = productPrice.getText().toString();
                 offerPrice = onOrderAbovePrice.getText().toString();
@@ -339,12 +337,7 @@ public class OrderSummary extends AppCompatActivity implements
                 grandTotalprice = grandTotalPrice.getText().toString();
 
                 priceText = quantityMultiplyPrice.getText().toString();
-                offerPriceText = showOfferText.getText().toString();
-                delivery_price_text = deliveryPriceText.getText().toString();
-                totalPriceText = totalAmountText.getText().toString();
                 gstPriceText = gstShow.getText().toString();
-                grandTotal = grandTotalText.getText().toString();
-                grandTotalpriceText = grandTotalPrice.getText().toString();
 
 
                 final DatabaseReference myBookingRef = FirebaseDatabase.getInstance().getReference("Users/" + FirebaseAuth.getInstance().getUid() + "/myBookings");
@@ -358,7 +351,7 @@ public class OrderSummary extends AppCompatActivity implements
                 final String M_id = "cfMlsN67852114360621";
                 final String customer_id = FirebaseAuth.getInstance().getUid();
                 final String order_id = "LIMELI8" + UUID.randomUUID().toString().substring(0, 5);
-                String url = "https://limel8.000webhostapp.com/Paytm/generateChecksum.php";
+                final String url = "https://limel8.000webhostapp.com/Paytm/generateChecksum.php";
                 final String callBack = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
 
                 final HashMap<String, String> priceDetails = new HashMap<>();
@@ -373,121 +366,168 @@ public class OrderSummary extends AppCompatActivity implements
                 priceDetails.put("gstValue", gstPriceText);
                 priceDetails.put("productSubTitleValue", productSubTitleValue);
                 priceDetails.put("productUrl", product_url);
-                priceDetails.put("orderStatus", "PLACED");
+                priceDetails.put("orderStatus", "Cancelled");
+                priceDetails.put("productName", product_name);
 
-                Log.i("priceWithDetails", priceDetails.toString());
 
-                RequestQueue requestQueue = Volley.newRequestQueue(OrderSummary.this);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                DatabaseReference permissionRef = FirebaseDatabase.getInstance().getReference("Permission/");
+                permissionRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.has("CHECKSUMHASH")) {
+                        Boolean isOk = dataSnapshot.getValue(Boolean.class);
 
-                                String CHECKSUMHASH = jsonObject.getString("CHECKSUMHASH");
+                        customProgressBar.dismissProgressBar();
 
-                                PaytmPGService paytmPGService = PaytmPGService.getStagingService("");
+                        if (isOk) {
 
-                                HashMap<String, String> paramMap = new HashMap<String, String>();
-                                paramMap.put("MID", M_id);
-                                paramMap.put("ORDER_ID", order_id);
-                                paramMap.put("CUST_ID", customer_id);
-                                paramMap.put("CHANNEL_ID", "WAP");
-                                paramMap.put("TXN_AMOUNT", decimalFormatPaytm.format(totalPriceWithGst));
-                                paramMap.put("WEBSITE", "WEBSTAGING");
-                                paramMap.put("INDUSTRY_TYPE_ID", "Retail");
-                                paramMap.put("CALLBACK_URL", callBack);
-                                paramMap.put("CHECKSUMHASH", CHECKSUMHASH);
 
-                                PaytmOrder order = new PaytmOrder(paramMap);
+                            RequestQueue requestQueue = Volley.newRequestQueue(OrderSummary.this);
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
 
-                                paytmPGService.initialize(order, null);
-                                paytmPGService.startPaymentTransaction(OrderSummary.this, true, true, new PaytmPaymentTransactionCallback() {
-                                    @Override
-                                    public void onTransactionResponse(Bundle inResponse) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        if (jsonObject.has("CHECKSUMHASH")) {
 
-                                        if (inResponse.getString("STATUS").equals("TXN_SUCCESS")) {
-                                            successAlertDialog("ORDER ID : " + order_id);
-                                            myBookingRef.child(key).setValue(priceDetails);
-                                            myBookingRef.child(key + "/timeStamp").setValue(ServerValue.TIMESTAMP);
-                                            myBookingRef.child(key + "/date").setValue(inResponse.getString("TXNDATE"));
+                                            String CHECKSUMHASH = jsonObject.getString("CHECKSUMHASH");
+
+                                            PaytmPGService paytmPGService = PaytmPGService.getStagingService("");
+
+                                            HashMap<String, String> paramMap = new HashMap<String, String>();
+                                            paramMap.put("MID", M_id);
+                                            paramMap.put("ORDER_ID", order_id);
+                                            paramMap.put("CUST_ID", customer_id);
+                                            paramMap.put("CHANNEL_ID", "WAP");
+                                            paramMap.put("TXN_AMOUNT", decimalFormatPaytm.format(totalPriceWithGst));
+                                            paramMap.put("WEBSITE", "WEBSTAGING");
+                                            paramMap.put("INDUSTRY_TYPE_ID", "Retail");
+                                            paramMap.put("CALLBACK_URL", callBack);
+                                            paramMap.put("CHECKSUMHASH", CHECKSUMHASH);
+
+                                            PaytmOrder order = new PaytmOrder(paramMap);
+
+                                            paytmPGService.initialize(order, null);
+                                            paytmPGService.startPaymentTransaction(OrderSummary.this, true, true, new PaytmPaymentTransactionCallback() {
+                                                @Override
+                                                public void onTransactionResponse(Bundle inResponse) {
+
+
+
+                                                    if (inResponse.getString("STATUS").equals("TXN_SUCCESS")) {
+                                                        myBookingRef.child(key).setValue(priceDetails);
+                                                        myBookingRef.child(key + "/key").setValue(key);
+                                                        myBookingRef.child(key + "/orderStatus").setValue("Order Placed");
+                                                        successAlertDialog("ORDER ID : " + order_id);
+                                                        myBookingRef.child(key + "/timeStamp").setValue(ServerValue.TIMESTAMP);
+                                                        myBookingRef.child(key + "/date").setValue(inResponse.getString("TXNDATE"));
+                                                        Toast.makeText(getApplicationContext(), inResponse.getString("RESPMSG"), Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                    if (inResponse.getString("STATUS").equals("TXN_FAILURE")) {
+                                                        myBookingRef.child(key).setValue(priceDetails);
+                                                        myBookingRef.child(key + "/key").setValue(key);
+                                                        myBookingRef.child(key + "/orderStatus").setValue("Cancelled");
+                                                        successAlertDialog("ORDER ID : " + order_id);
+                                                        myBookingRef.child(key + "/timeStamp").setValue(ServerValue.TIMESTAMP);
+                                                        myBookingRef.child(key + "/date").setValue(inResponse.getString("TXNDATE"));
+                                                        Toast.makeText(getApplicationContext(), inResponse.getString("RESPMSG"), Toast.LENGTH_LONG).show();
+                                                    }
+
+
+                                                }
+
+                                                @Override
+                                                public void networkNotAvailable() {
+                                                    Toast.makeText(getApplicationContext(), "Network connection error: Check your internet connectivity", Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void clientAuthenticationFailed(String inErrorMessage) {
+                                                    Toast.makeText(getApplicationContext(), "Authentication failed: Server error" + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void someUIErrorOccurred(String inErrorMessage) {
+                                                    Toast.makeText(getApplicationContext(), "UI Error " + inErrorMessage, Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                                                    Toast.makeText(getApplicationContext(), "Unable to load webpage " + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void onBackPressedCancelTransaction() {
+                                                    Toast.makeText(getApplicationContext(), "Transaction cancelled", Toast.LENGTH_LONG).show();
+                                                }
+
+                                                @Override
+                                                public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                                                    Toast.makeText(getApplicationContext(), "Transaction cancelled", Toast.LENGTH_LONG).show();
+
+                                                }
+                                            });
+
                                         }
-
-
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
 
-                                    @Override
-                                    public void networkNotAvailable() {
-                                        Toast.makeText(getApplicationContext(), "Network connection error: Check your internet connectivity", Toast.LENGTH_LONG).show();
-                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
 
-                                    @Override
-                                    public void clientAuthenticationFailed(String inErrorMessage) {
-                                        Toast.makeText(getApplicationContext(), "Authentication failed: Server error" + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+                                    try {
+                                        customProgressBar.dismissProgressBar();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
+                                    Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
 
-                                    @Override
-                                    public void someUIErrorOccurred(String inErrorMessage) {
-                                        Toast.makeText(getApplicationContext(), "UI Error " + inErrorMessage, Toast.LENGTH_LONG).show();
-                                    }
+                                }
+                            }) {
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
 
-                                    @Override
-                                    public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
-                                        Toast.makeText(getApplicationContext(), "Unable to load webpage " + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
-                                    }
+                                    Map<String, String> paramMap = new HashMap<String, String>();
+                                    paramMap.put("MID", M_id);
+                                    paramMap.put("ORDER_ID", order_id);
+                                    paramMap.put("CUST_ID", customer_id);
+                                    paramMap.put("CHANNEL_ID", "WAP");
+                                    paramMap.put("TXN_AMOUNT", decimalFormatPaytm.format(totalPriceWithGst));
+                                    paramMap.put("WEBSITE", "WEBSTAGING");
+                                    paramMap.put("INDUSTRY_TYPE_ID", "Retail");
+                                    paramMap.put("CALLBACK_URL", callBack);
 
-                                    @Override
-                                    public void onBackPressedCancelTransaction() {
-                                        Toast.makeText(getApplicationContext(), "Transaction cancelled", Toast.LENGTH_LONG).show();
-                                    }
+                                    return paramMap;
+                                }
+                            };
 
-                                    @Override
-                                    public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
-                                        Toast.makeText(getApplicationContext(), "Transaction cancelled", Toast.LENGTH_LONG).show();
-                                        Log.i("inResponse", inResponse.toString());
-                                        Log.i("inErrorMessage", inErrorMessage.toString());
-                                    }
-                                });
+                            requestQueue.add(stringRequest);
 
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Sorry, We're currently out of service. Please try again later.", Toast.LENGTH_LONG);
+                            View view =toast.getView();
+                            view.setBackgroundColor(Color.WHITE);
+                            TextView toastMessage = (TextView) toast.getView().findViewById(android.R.id.message);
+                            toastMessage.setTextColor(Color.BLACK);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
                         }
 
+
                     }
-                }, new Response.ErrorListener() {
+
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        try {
-                            customProgressBar.dismissProgressBar();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
+                });
 
-                        Map<String, String> paramMap = new HashMap<String, String>();
-                        paramMap.put("MID", M_id);
-                        paramMap.put("ORDER_ID", order_id);
-                        paramMap.put("CUST_ID", customer_id);
-                        paramMap.put("CHANNEL_ID", "WAP");
-                        paramMap.put("TXN_AMOUNT", decimalFormatPaytm.format(totalPriceWithGst));
-                        paramMap.put("WEBSITE", "WEBSTAGING");
-                        paramMap.put("INDUSTRY_TYPE_ID", "Retail");
-                        paramMap.put("CALLBACK_URL", callBack);
-
-                        return paramMap;
-                    }
-                };
-
-                requestQueue.add(stringRequest);
 
             }
         });
@@ -639,7 +679,7 @@ public class OrderSummary extends AppCompatActivity implements
 
                             Double gstDouble = Double.parseDouble(gst);
 
-                            Double tax = ( gstDouble / 100 ) * changePriceWithQuantity;
+                            Double tax = (gstDouble / 100) * changePriceWithQuantity;
 
                             totalPriceWithGst = changePriceWithQuantity + tax;
 

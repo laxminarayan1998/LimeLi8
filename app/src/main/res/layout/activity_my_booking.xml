@@ -7,8 +7,13 @@
     android:background="@color/semiblackBg"
     tools:context=".MyBooking">
 
+    <include
+        android:id="@+id/homePageToolbar"
+        layout="@layout/toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
+        android:layout_below="@id/homePageToolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
