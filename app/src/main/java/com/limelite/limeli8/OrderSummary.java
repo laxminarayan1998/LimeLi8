@@ -91,6 +91,8 @@ public class OrderSummary extends AppCompatActivity implements
 
     DecimalFormat decimalFormatPaytm = new DecimalFormat("#####.##");
 
+    String houseNo, roadNo, city, state, pinCode, landmark, number, alterNumber, name, details = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +111,7 @@ public class OrderSummary extends AppCompatActivity implements
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                String houseNo, roadNo, city, state, pinCode, landmark, number, alterNumber, name, details = "";
+
 
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -320,14 +322,14 @@ public class OrderSummary extends AppCompatActivity implements
 
                 customProgressBar.startProgressBar();
 
-                String price = "";
-                String offerPrice = "";
-                String delivery_price = "";
-                String total_price = "";
-                String gstPrice = "";
-                String grandTotalprice = "";
-                String priceText = "";
-                String gstPriceText = "";
+                String price;
+                String offerPrice;
+                String delivery_price;
+                String total_price;
+                String gstPrice;
+                String grandTotalprice;
+                String priceText;
+                String gstPriceText;
 
                 price = productPrice.getText().toString();
                 offerPrice = onOrderAbovePrice.getText().toString();
@@ -368,6 +370,8 @@ public class OrderSummary extends AppCompatActivity implements
                 priceDetails.put("productUrl", product_url);
                 priceDetails.put("orderStatus", "Cancelled");
                 priceDetails.put("productName", product_name);
+                priceDetails.put("address", details);
+                priceDetails.put("name", name);
 
 
                 DatabaseReference permissionRef = FirebaseDatabase.getInstance().getReference("Permission/");
@@ -432,8 +436,9 @@ public class OrderSummary extends AppCompatActivity implements
                                                         successAlertDialog("ORDER ID : " + order_id);
                                                         myBookingRef.child(key + "/timeStamp").setValue(ServerValue.TIMESTAMP);
                                                         myBookingRef.child(key + "/date").setValue(inResponse.getString("TXNDATE"));
-                                                        Toast.makeText(getApplicationContext(), inResponse.getString("RESPMSG"), Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getApplicationContext(), inResponse.getString("RESPMSG"), Toast.LENGTH_LONG).show(   );
                                                     }
+
 
 
                                                 }

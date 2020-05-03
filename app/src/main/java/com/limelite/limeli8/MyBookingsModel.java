@@ -2,12 +2,12 @@ package com.limelite.limeli8;
 
 public class MyBookingsModel {
 
-    String date, deliveryPrice, grandTotalPrice, gstPrice, gstValue, offerPrice, orderId, orderStatus, price, priceWithQuantity, productSubTitleValue, productUrl, totalPrice, productName;
+    String date, deliveryPrice, grandTotalPrice, gstPrice, gstValue, offerPrice, orderId, orderStatus, price, priceWithQuantity, productSubTitleValue, productUrl, totalPrice, productName, key;
 
     public MyBookingsModel() {
     }
 
-    public MyBookingsModel(String date, String deliveryPrice, String grandTotalPrice, String gstPrice, String gstValue, String offerPrice, String orderId, String orderStatus, String price, String priceWithQuantity, String productSubTitleValue, String productUrl, String totalPrice, String productName) {
+    public MyBookingsModel(String date, String deliveryPrice, String grandTotalPrice, String gstPrice, String gstValue, String offerPrice, String orderId, String orderStatus, String price, String priceWithQuantity, String productSubTitleValue, String productUrl, String totalPrice, String productName, String key) {
         this.date = date;
         this.deliveryPrice = deliveryPrice;
         this.grandTotalPrice = grandTotalPrice;
@@ -22,6 +22,7 @@ public class MyBookingsModel {
         this.productUrl = productUrl;
         this.totalPrice = totalPrice;
         this.productName = productName;
+        this.key = key;
     }
 
     public String getDate() {
@@ -78,5 +79,9 @@ public class MyBookingsModel {
 
     public String getProductName() {
         return productName;
+    }
+
+    public String getKey() {
+        return key;
     }
 }
