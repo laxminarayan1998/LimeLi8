@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/semiblackBg"
+    android:background="@drawable/backgroud"
     tools:context=".HomePage">
 
     <!--    <com.google.android.material.appbar.AppBarLayout-->
@@ -115,12 +115,118 @@
 
                 </com.google.android.material.tabs.TabLayout>
 
+                <LinearLayout
+                    android:id="@+id/card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/indicator"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/item_card_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/helvetica"
+                                android:text="Print"
+                                android:textColor="#FFF"
+                                android:textSize="16dp" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/item_card_view_two"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/helvetica"
+                                android:text="TVC"
+                                android:textColor="#FFF"
+                                android:textSize="16dp" />
+
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/item_card_view_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginVertical="16dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/helvetica"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:text="Digital Marketing"
+                                android:textColor="#FFF"
+                                android:textSize="16dp" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/item_card_view_four"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginVertical="16dp"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/helvetica"
+                                android:text="Events"
+                                android:textColor="#FFF"
+                                android:textSize="16dp" />
+
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/branding_heading_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/indicator"
+                    android:layout_below="@id/card_view"
                     android:fontFamily="@font/helvetica"
+                    android:gravity="center"
                     android:letterSpacing=".1"
                     android:text="BRANDING"
                     android:textAlignment="center"

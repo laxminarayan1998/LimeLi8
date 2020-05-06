@@ -3,6 +3,7 @@ package com.limelite.limeli8;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
@@ -41,6 +43,8 @@ import java.util.TimerTask;
 
 public class HomePage extends AppCompatActivity {
 
+    static boolean MAKE_ITEM_CENTER = false;
+
     private List<SlideModel> slideItems;
     private ViewPager slidePager;
     private TabLayout indicator;
@@ -55,6 +59,7 @@ public class HomePage extends AppCompatActivity {
     ImageView noticeImage;
     DatabaseReference databaseReference;
     CustomProgressBar customProgressBar;
+    CardView itemView, itemViewTwo, itemViewThree, itemViewFour;
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -83,6 +88,10 @@ public class HomePage extends AppCompatActivity {
         websiteApplicationRecyclerView = findViewById(R.id.website_recycler_view);
         otherRecyclerView = findViewById(R.id.other_recycler_view);
         noticeImage = findViewById(R.id.notice_image);
+        itemView = findViewById(R.id.item_card_view);
+        itemViewTwo = findViewById(R.id.item_card_view_two);
+        itemViewThree= findViewById(R.id.item_card_view_three);
+        itemViewFour = findViewById(R.id.item_card_view_four);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -168,6 +177,26 @@ public class HomePage extends AppCompatActivity {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new HomePage.SliderTimer(), 5000, 5000);
         indicator.setupWithViewPager(slidePager, true);
+
+
+        itemView.setBackgroundResource(R.drawable.branding_background);
+        itemViewTwo.setBackgroundResource(R.drawable.evemts_background);
+        itemViewThree.setBackgroundResource(R.drawable.promotion_background);
+        itemViewFour.setBackgroundResource(R.drawable.events_background);
+
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MAKE_ITEM_CENTER = true;
+
+                Intent intent = new Intent(HomePage.this, CardViewClick.class);
+                intent.putExtra("item", "Print");
+                startActivity(intent);
+
+            }
+        });
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Products");

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,19 @@ public class HorizontalScrollRecyclerAdapter extends RecyclerView.Adapter<Horizo
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.print_item, parent, false);
+
+        if (HomePage.MAKE_ITEM_CENTER == true) {
+
+            LinearLayout linearLayout = view.findViewById(R.id.single_item);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 30, 0, 30);
+            linearLayout.setLayoutParams(params);
+        }
+
         return new CustomViewHolder(view);
     }
 
