@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroud"
+    tools:context=".SearchItems">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardElevation="5dp">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:queryHint="Search e.g. Print, Visiting Card, Digital Marketing"
+            android:iconifiedByDefault="false"
+            android:layout_alignParentTop="true"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/card_view"/>
+
+
+
+</RelativeLayout>

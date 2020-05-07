@@ -117,6 +117,37 @@ public class CardViewClick extends AppCompatActivity {
                     }
                 });
 
+            } else {
+
+                Query tvcQuery = databaseReference.orderByChild("category").equalTo(item);
+
+                tvcQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        productModelList.clear();
+
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                            ProductModel productModel = dataSnapshot1.getValue(ProductModel.class);
+                            productModelList.add(productModel);
+
+                        }
+
+                        HorizontalScrollRecyclerAdapter horizontalScrollRecyclerAdapter = new HorizontalScrollRecyclerAdapter(CardViewClick.this, productModelList);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(CardViewClick.this, 2);
+                        printRecyclerView.setLayoutManager(gridLayoutManager);
+
+                        printRecyclerView.setAdapter(horizontalScrollRecyclerAdapter);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
         }
 

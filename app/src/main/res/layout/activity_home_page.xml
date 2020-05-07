@@ -27,13 +27,7 @@
     <!--                android:src="@drawable/home_page_img"-->
     <!--                app:layout_collapseMode="parallax" />-->
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorAccent"
-        app:theme="@style/ToolbarColored"
-        app:titleTextColor="#FFF" />
+
 
     <!--            </androidx.appcompat.widget.Toolbar>-->
 
@@ -41,17 +35,58 @@
 
     <!--    </com.google.android.material.appbar.AppBarLayout>-->
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <com.emilsjolander.components.StickyScrollViewItems.StickyScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sticky_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tool_bar"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorAccent"
+                app:theme="@style/ToolbarColored"
+                app:titleTextColor="#FFF" />
+
+            <LinearLayout
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:tag="sticky"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:src="@drawable/ic_search_black_24dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#999999"
+                        android:layout_gravity="center_vertical"
+                        android:text="Search e.g; Print, Visiting Card, Digital Marketing"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
 
             <ImageView
                 android:id="@+id/notice_image"
@@ -577,6 +612,6 @@
         </LinearLayout>
 
 
-    </androidx.core.widget.NestedScrollView>
+    </com.emilsjolander.components.StickyScrollViewItems.StickyScrollView>
 
 </RelativeLayout>

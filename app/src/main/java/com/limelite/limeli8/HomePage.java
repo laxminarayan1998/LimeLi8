@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class HomePage extends AppCompatActivity {
     DatabaseReference databaseReference;
     CustomProgressBar customProgressBar;
     CardView itemView, itemViewTwo, itemViewThree, itemViewFour;
+    LinearLayout searchView;
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -75,8 +77,9 @@ public class HomePage extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_account_circle_black_24dp);
-        getSupportActionBar().setTitle("LimeLite");
+        //toolbar.setNavigationIcon(R.drawable.ic_account_circle_black_24dp);
+        getSupportActionBar().setLogo(R.drawable.ic_lime_white_logo);
+        getSupportActionBar().setTitle("");
 
         slidePager = findViewById(R.id.view_pager);
         indicator = findViewById(R.id.indicator);
@@ -92,9 +95,19 @@ public class HomePage extends AppCompatActivity {
         itemViewTwo = findViewById(R.id.item_card_view_two);
         itemViewThree= findViewById(R.id.item_card_view_three);
         itemViewFour = findViewById(R.id.item_card_view_four);
+        searchView = findViewById(R.id.searchView);
+
+
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MAKE_ITEM_CENTER = true;
+                startActivity(new Intent(HomePage.this, SearchItems.class));
+            }
+        });
+
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
 
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -193,6 +206,45 @@ public class HomePage extends AppCompatActivity {
 
                 Intent intent = new Intent(HomePage.this, CardViewClick.class);
                 intent.putExtra("item", "Print");
+                startActivity(intent);
+
+            }
+        });
+
+        itemViewTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MAKE_ITEM_CENTER = true;
+
+                Intent intent = new Intent(HomePage.this, CardViewClick.class);
+                intent.putExtra("item", "TVC");
+                startActivity(intent);
+
+            }
+        });
+
+        itemViewThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MAKE_ITEM_CENTER = true;
+
+                Intent intent = new Intent(HomePage.this, CardViewClick.class);
+                intent.putExtra("item", "Digital Marketing");
+                startActivity(intent);
+
+            }
+        });
+
+        itemViewFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MAKE_ITEM_CENTER = true;
+
+                Intent intent = new Intent(HomePage.this, CardViewClick.class);
+                intent.putExtra("item", "Events and Wedding");
                 startActivity(intent);
 
             }
