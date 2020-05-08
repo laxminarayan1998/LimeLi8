@@ -3,7 +3,6 @@ package com.limelite.limeli8;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,10 @@ import java.util.List;
 public class subProductsRecyclerAdapter extends RecyclerView.Adapter<subProductsRecyclerAdapter.CustomViewHolder> {
 
     private Context context;
-    List<SubProductsModel> subProductsModelList;
+    private List<SubProductsModel> subProductsModelList;
     static String SUB_PRODUCT_NAME;
 
-    public subProductsRecyclerAdapter(Context context, List<SubProductsModel> subProductsModelList) {
+    subProductsRecyclerAdapter(Context context, List<SubProductsModel> subProductsModelList) {
         this.context = context;
         this.subProductsModelList = subProductsModelList;
     }
@@ -40,30 +39,48 @@ public class subProductsRecyclerAdapter extends RecyclerView.Adapter<subProducts
 
         String strikeprice = subProductsModelList.get(position).getStrikePrice();
         String flatoff = subProductsModelList.get(position).getFlatOff();
-        final int strikePrice = Integer.parseInt(strikeprice);
-        final int flatOff = Integer.parseInt(flatoff);
+
+        if (strikeprice == null) {
+            holder.rupeeSymbol.setVisibility(View.GONE);
+        }
+
+        final int strikePrice = strikeprice != null ? Integer.parseInt(strikeprice) : 0;
+        final int flatOff = strikeprice != null ?  Integer.parseInt(flatoff) : 0;
 
         Picasso.get()
                 .load(subProductsModelList.get(position).getImageUrl())
                 .into(holder.subProductImage);
 
         holder.subProductTitle.setText(subProductsModelList.get(position).getName());
-        holder.subProductPrice.setText(String.valueOf(strikePrice - flatOff));
 
-        holder.subProductPcs.setText(" for"+ subProductsModelList.get(position).getPieces() + "pcs");
+        String strkPriceMinusFlatOff = strikeprice != null && flatoff != null ? String.valueOf(strikePrice - flatOff) : "";
+        holder.subProductPrice.setText(strkPriceMinusFlatOff);
+
+        final String get_Pcs = subProductsModelList.get(position).getPieces() != null ? " for"+ subProductsModelList.get(position).getPieces() + "pcs" : "";
+        holder.subProductPcs.setText(get_Pcs);
 
         if (flatoff.equals("0")) {
             holder.subProductStrikeOffer.setText("");
             holder.subProductStrikeThroughPrice.setText("");
         } else {
-            holder.subProductStrikeThroughPrice.setText(" " + subProductsModelList.get(position).getStrikePrice() + " ");
+            String strike_Price = subProductsModelList.get(position).getStrikePrice() != null ? " " + subProductsModelList.get(position).getStrikePrice() + " " : "";
+            holder.subProductStrikeThroughPrice.setText(strike_Price);
             holder.subProductStrikeThroughPrice.setPaintFlags(holder.subProductStrikeThroughPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.subProductStrikeOffer.setText("flat ₹" + subProductsModelList.get(position).getFlatOff() + " off");
+            String flat_Off = subProductsModelList.get(position).getFlatOff() != null ? "flat ₹" + subProductsModelList.get(position).getFlatOff() + " off" : "";
+            holder.subProductStrikeOffer.setText(flat_Off);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (subProductsModelList.get(position).getPieces() == null) {
+                    Intent intent = new Intent(context, AnotherLayout.class);
+                    intent.putExtra("key", holder.subProductTitle.getText());
+                    context.startActivity(intent);
+                    return;
+                }
+
                 SUB_PRODUCT_NAME = subProductsModelList.get(position).getName();
                 Intent intent = new Intent(context, SpecificationPage.class);
                 intent.putExtra("product_image", subProductsModelList.get(position).getImageUrl());
@@ -85,13 +102,13 @@ public class subProductsRecyclerAdapter extends RecyclerView.Adapter<subProducts
         return subProductsModelList.size();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder {
+    class CustomViewHolder extends RecyclerView.ViewHolder {
 
 
         ImageView subProductImage;
-        TextView subProductPrice, subProductPcs, subProductTitle, subProductStrikeThroughPrice, subProductStrikeOffer;
+        TextView subProductPrice, subProductPcs, subProductTitle, subProductStrikeThroughPrice, subProductStrikeOffer, rupeeSymbol;
 
-        public CustomViewHolder(@NonNull View itemView) {
+        CustomViewHolder(@NonNull View itemView) {
             super(itemView);
 
             subProductImage = itemView.findViewById(R.id.sub_product_img);
@@ -100,6 +117,7 @@ public class subProductsRecyclerAdapter extends RecyclerView.Adapter<subProducts
             subProductStrikeThroughPrice = itemView.findViewById(R.id.sub_product_strike_through_price);
             subProductPcs = itemView.findViewById(R.id.sub_product_pcs);
             subProductStrikeOffer = itemView.findViewById(R.id.sub_product_strike_offer);
+            rupeeSymbol = itemView.findViewById(R.id.rupee_symbol);
 
         }
     }

@@ -94,6 +94,15 @@ public class SlidePageAdapter extends PagerAdapter {
                             intent.putExtra("product_strike_price", productStrikePrice);
                             intent.putExtra("products_pcs", " for" + productPcs + "pcs");
                             intent.putExtra("product_strike_offer", "flat ₹" + productStrikeOffer + " off");
+
+                            if (productPcs == null) {
+                                Intent newIntent = new Intent(context, AnotherLayout.class);
+                                HorizontalScrollRecyclerAdapter.PRODUCT_NAME = slideItems.get(position).getProduct();
+                                newIntent.putExtra("key", slideItems.get(position).getSubProduct());
+                                context.startActivity(newIntent);
+                                return;
+                            }
+
                             context.startActivity(intent);
                         }
 

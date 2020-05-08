@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchItems"></activity>
+        <activity android:name=".AnotherLayout"></activity>
+        <activity android:name=".SearchItems" />
         <activity android:name=".CardViewClick" />
         <activity android:name=".MyBookingsDetails" />
         <activity android:name=".MyBooking" />
