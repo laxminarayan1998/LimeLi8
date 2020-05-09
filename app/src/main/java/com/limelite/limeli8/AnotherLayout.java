@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +32,8 @@ import java.util.Objects;
 public class AnotherLayout extends AppCompatActivity {
 
     FrameLayout frameLayout;
-    TextView finalPrice, strikePrice, flatOff, name, desc_head, desc;
+    TextView finalPrice, strikePrice, flatOff, name, desc_head;
+    WebView desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,9 @@ public class AnotherLayout extends AppCompatActivity {
         name = findViewById(R.id.name);
         desc_head = findViewById(R.id.desc_heading);
         desc = findViewById(R.id.description);
+
+        desc.getSettings().setJavaScriptEnabled(true);
+        desc.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Hello");
@@ -83,7 +88,6 @@ public class AnotherLayout extends AppCompatActivity {
                     final String snapshotId = dataSnapshot.child("videoId").getValue(String.class);
                     final String productName = dataSnapshot.child("name").getValue(String.class);
                     final String image = dataSnapshot.child("imageUrl").getValue(String.class);
-                    final String descHead = dataSnapshot.child("descHead").getValue(String.class);
                     final String description = dataSnapshot.child("description").getValue(String.class);
                     final String flat_off = dataSnapshot.child("flatOff").getValue(String.class);
                     final String strike_price = " " + dataSnapshot.child("strikePrice").getValue(String.class) + " ";
@@ -112,12 +116,8 @@ public class AnotherLayout extends AppCompatActivity {
 
                     }
 
-                    if (descHead != null) {
-                        desc_head.setText(Html.fromHtml(descHead));
-                    }
-
                     if (description != null) {
-                        desc.setText(Html.fromHtml(description));
+                        desc.loadData(description, "text/html; charset=utf-8", "utf-8");
                     }
 
                     final String videoId;
