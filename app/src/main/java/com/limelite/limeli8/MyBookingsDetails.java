@@ -21,9 +21,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
+
 public class MyBookingsDetails extends AppCompatActivity {
 
-    TextView orderId, productName, productSubTitle, productAmount, orderDate, userName, userAddress, priceDetailsPrice, gstShow, gstPrice, offerPrice, delivery_price, quantityMultiplePrice, totalAmount, grand_total;
+    TextView orderId, productName, productSubTitle, productAmount, orderDate, userName, userAddress, priceDetailsPrice, gstShow, gstPrice, offerPrice, delivery_price, quantityMultiplePrice, totalAmount, grand_total, paymentMethodShow;
     ImageView statusIcon, productUrl;
     RelativeLayout onOrderAboveLayout;
 
@@ -35,12 +39,13 @@ public class MyBookingsDetails extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.homePageToolbar);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Order Details");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Order Details");
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setNavigationIcon(R.drawable.ic_back_button);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HomePage.MAKE_ITEM_CENTER = false;
                 finish();
             }
         });
@@ -64,6 +69,7 @@ public class MyBookingsDetails extends AppCompatActivity {
         delivery_price = findViewById(R.id.deliveryPrice);
         totalAmount = findViewById(R.id.totalAmount);
         grand_total = findViewById(R.id.grand_total);
+        paymentMethodShow = findViewById(R.id.payment_method_show);
 
         Intent intent = getIntent();
         String key = intent.getStringExtra("key");
@@ -74,7 +80,7 @@ public class MyBookingsDetails extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String address, date, _deliveryPrice, _grandTotalPrice, _gstPrice, _gstValue, _name, _offerPrice, _orderId, _orderStatus, _price,
-                        _priceWithQuantity, _productName, _productSubTitleValue, _productUrl, _totalPrice, _deliveryDate;
+                        _priceWithQuantity, _productName, _productSubTitleValue, _productUrl, _totalPrice, _deliveryDate, _paymentMethod;
 
 
                 address = dataSnapshot.child("address").getValue(String.class);
@@ -94,6 +100,7 @@ public class MyBookingsDetails extends AppCompatActivity {
                 _productUrl = dataSnapshot.child("productUrl").getValue(String.class);
                 _totalPrice = dataSnapshot.child("totalPrice").getValue(String.class);
                 _deliveryDate = dataSnapshot.child("deliveryDate").getValue(String.class);
+                _paymentMethod = dataSnapshot.child("paymentMethod").getValue(String.class);
 
 
                 if (_orderId != null) {
@@ -176,6 +183,9 @@ public class MyBookingsDetails extends AppCompatActivity {
                     grand_total.setText(_grandTotalPrice);
                 }
 
+                if (_paymentMethod !=null) {
+                    paymentMethodShow.setText("· " + _paymentMethod);
+                }
 
 
             }
@@ -186,5 +196,11 @@ public class MyBookingsDetails extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        HomePage.MAKE_ITEM_CENTER = false;
+        super.onBackPressed();
     }
 }

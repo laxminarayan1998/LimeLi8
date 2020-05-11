@@ -3,17 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/map"
-        android:orderInCategory="100"
-        android:title="Bhubaneswar"
-        android:icon="@drawable/ic_notifications_none_black_24dp"
-        app:showAsAction="always|withText">
-    </item>
-
-    <item
         android:id="@+id/my_booking"
         android:title="My bookings"
         android:orderInCategory="200"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        app:showAsAction="collapseActionView|withText"/>
+
+    <item
+        android:id="@+id/address"
+        android:title="My Address"
+        android:orderInCategory="100"
         android:icon="@drawable/ic_favorite_black_24dp"
         app:showAsAction="collapseActionView|withText"/>
 

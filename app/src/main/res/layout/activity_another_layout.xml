@@ -142,9 +142,27 @@
                         android:textSize="14dp" />
 
                     <Button
+                        android:id="@+id/click_here"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Click here to contact"
+                        android:text="Click to chat in whatsApp ✆"
+                        android:textColor="@color/small_logo_color"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/button_background_color"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Or"
+                        android:layout_marginVertical="10dp"
+                        android:textColor="#FFF"
+                        android:textAlignment="center"/>
+
+                    <Button
+                        android:id="@+id/click_here_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Click to call ☎"
                         android:textColor="@color/small_logo_color"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/button_background_color"/>

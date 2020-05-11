@@ -462,6 +462,9 @@ public class HomePage extends AppCompatActivity {
             case R.id.my_booking:
                 startActivity(new Intent(getApplicationContext(), MyBooking.class));
                 return true;
+            case R.id.address:
+                startActivity(new Intent(getApplicationContext(), Address.class));
+                return true;
             case R.id.log_out:
                 FirebaseAuth.getInstance().signOut();
                 if (FirebaseAuth.getInstance().getCurrentUser() == null) {

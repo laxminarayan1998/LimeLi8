@@ -4,14 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,7 +36,9 @@ public class AnotherLayout extends AppCompatActivity {
     FrameLayout frameLayout;
     TextView finalPrice, strikePrice, flatOff, name, desc_head;
     WebView desc;
+    Button clickHere, clickHerePhone;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,8 @@ public class AnotherLayout extends AppCompatActivity {
         name = findViewById(R.id.name);
         desc_head = findViewById(R.id.desc_heading);
         desc = findViewById(R.id.description);
+        clickHere = findViewById(R.id.click_here);
+        clickHerePhone = findViewById(R.id.click_here_phone);
 
         desc.getSettings().setJavaScriptEnabled(true);
         desc.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -157,6 +163,42 @@ public class AnotherLayout extends AppCompatActivity {
 
 
         }
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("data");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                final String phoneNumber = dataSnapshot.child("phoneNumber").toString();
+                final String whatsAppNumber = dataSnapshot.child("whatsAppNumber").toString();
+
+                clickHere.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String url = "https://api.whatsapp.com/send?phone=" + whatsAppNumber;
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                });
+
+                clickHerePhone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null));
+                        startActivity(intent);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
 
 
     }
